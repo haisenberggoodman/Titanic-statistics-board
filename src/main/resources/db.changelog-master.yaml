@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: yourname
+      changes:
+        - createTable:
+            tableName: passenger
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: age
+                  type: INTEGER
+              - column:
+                  name: fare
+                  type: FLOAT
+              - column:
+                  name: survived
+                  type: BOOLEAN
+              - column:
+                  name: pclass
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sib_sp
+                  type: INTEGER
+              - column:
+                  name: parch
+                  type: INTEGER
+              - column:
+                  name: sex
+                  type: VARCHAR(255)
