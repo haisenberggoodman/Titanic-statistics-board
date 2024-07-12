@@ -1,6 +1,4 @@
-package com.vasev.titanic_statistics_border.entities;
-
-import com.vasev.titanic_statistics_border.Pclass;
+package com.vasev.titanic_statistics_border.model;
 
 import jakarta.persistence.*;
 import lombok.*;

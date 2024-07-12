@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/titanic
-    username: postgres
+    username: titanic_user
     password: DataBase1zqa
     driver-class-name: org.postgresql.Driver
   jpa:

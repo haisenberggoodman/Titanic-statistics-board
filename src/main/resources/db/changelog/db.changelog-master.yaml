@@ -14,17 +14,6 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: age
-                  type: INTEGER
-              - column:
-                  name: fare
-                  type: FLOAT
-              - column:
                   name: survived
                   type: BOOLEAN
               - column:
@@ -33,11 +22,22 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sex
+                  type: VARCHAR(255)
+              - column:
+                  name: age
+                  type: INTEGER
+              - column:
                   name: sib_sp
                   type: INTEGER
               - column:
                   name: parch
                   type: INTEGER
               - column:
-                  name: sex
-                  type: VARCHAR(255)
+                  name: fare
+                  type: FLOAT

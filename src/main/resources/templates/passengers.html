@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Passengers List</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="my-4">Passengers List</h1>
+        <div class="mb-3">
+            <label for="search" class="form-label">Search by Name</label>
+            <input type="text" class="form-control" id="search" placeholder="Enter name">
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col"><a href="#" onclick="sortTable('name')">Name</a></th>
+                    <th scope="col"><a href="#" onclick="sortTable('age')">Age</a></th>
+                    <th scope="col"><a href="#" onclick="sortTable('fare')">Fare</a></th>
+                    <th scope="col">Survived</th>
+                    <th scope="col">Pclass</th>
+                    <th scope="col">Siblings/Spouses Aboard</th>
+                    <th scope="col">Parents/Children Aboard</th>
+                    <th scope="col">Sex</th>
+                </tr>
+            </thead>
+            <tbody id="passengerTableBody">
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#" onclick="prevPage()">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#" onclick="nextPage()">Next</a></li>
+            </ul>
+        </nav>
+        <div class="my-4">
+            <button class="btn btn-primary" onclick="filterSurvivors()">Show Survivors</button>
+            <button class="btn btn-secondary" onclick="filterAdults()">Show Adults</button>
+            <button class="btn btn-info" onclick="filterMale()">Show Male Passengers</button>
+            <button class="btn btn-warning" onclick="filterWithoutRelatives()">Show Passengers without
+                Relatives</button>
+        </div>
+        <div class="my-4">
+            <h2>Statistics</h2>
+            <p id="totalFare">Total Fare: </p>
+            <p id="totalWithRelatives">Total with Relatives: </p>
+            <p id="totalSurvived">Total Survived: </p>
+        </div>
+    </div>
+
+    <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentPage = 0;
+        let pageSize = 50;
+        let sortBy = 'id';
+        let order = 'asc';
+
+        $(document).ready(function () {
+            loadPassengers();
+            // слушаем событие изменения поля ввода для поиска
+            $('#search').on('input', function () {
+                const name = $(this).val();
+                filterByName(name);
+            });
+        });
+
+        function loadPassengers(filters = {}) {
+            const params = new URLSearchParams({
+                page: currentPage,
+                size: pageSize,
+                sortBy: sortBy,
+                order: order,
+                ...filters
+            });
+
+            $.get(`/api/passengers?${params.toString()}`, function (data) {
+                $('#passengerTableBody').empty();
+                data.content.forEach(passenger => {
+                    $('#passengerTableBody').append(`
+                    <tr>
+                        <td>${passenger.name}</td>
+                        <td>${passenger.age}</td>
+                        <td>${passenger.fare}</td>
+                        <td>${passenger.survived ? 'Yes' : 'No'}</td>
+                        <td>${passenger.pclass}</td>
+                        <td>${passenger.sibSp}</td>
+                        <td>${passenger.parch}</td>
+                        <td>${passenger.sex}</td>
+                    </tr>
+                `);
+                });
+                loadStats();
+            });
+        }
+
+        function sortTable(field) {
+            sortBy = field;
+            order = order === 'asc' ? 'desc' : 'asc';
+            loadPassengers();
+        }
+
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                loadPassengers();
+            }
+        }
+
+        function nextPage() {
+            currentPage++;
+            loadPassengers();
+        }
+
+        function filterSurvivors() {
+            loadPassengers({ survived: true });
+        }
+
+        function filterAdults() {
+            loadPassengers({ adult: true });
+        }
+
+        function filterMale() {
+            loadPassengers({ gender: 'male' });
+        }
+
+        function filterWithoutRelatives() {
+            loadPassengers({ noRelatives: true });
+        }
+
+        function loadStats() {
+            $.get('/api/passengers/stats', function (data) {
+                $('#totalFare').text(`Total Fare: ${data.totalFare}`);
+                $('#totalWithRelatives').text(`Total with Relatives: ${data.totalWithRelatives}`);
+                $('#totalSurvived').text(`Total Survived: ${data.totalSurvived}`);
+            });
+        }
+
+        function filterByName(name) {
+            if (name.trim() === '') {
+                loadPassengers(); // if empty, load all
+            } else {
+                const filters = { name: name };
+                loadPassengers(filters);
+            }
+        }
+    </script>
+</body>
+
+</html>

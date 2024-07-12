@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.vasev.titanic_statistics_border.Pclass;
-import com.vasev.titanic_statistics_border.entities.Passenger;
+import com.vasev.titanic_statistics_border.model.Passenger;
+import com.vasev.titanic_statistics_border.model.Pclass;
 import com.vasev.titanic_statistics_border.repository.PassengerRepository;
 
+@Component
 public class DataLoader {
     @Autowired
     private PassengerRepository passengerRepository;
@@ -27,14 +29,16 @@ public class DataLoader {
                 List<Passenger> passengers = in.lines().skip(1).map(line -> {
                     String[] fields = line.split(",");
                     Passenger passenger = new Passenger();
+                    passenger.setSurvived((fields[0]).equals("1"));
+                    int pclassValue = Integer.parseInt(fields[1]); 
+                    passenger.setPclass(Pclass.fromInt(pclassValue)); 
+                    // passenger.setPclass(Pclass.valueOf(fields[1]));
                     passenger.setName(fields[2]);
-                    passenger.setAge(fields[5].isEmpty() ? null : Integer.parseInt(fields[5]));
-                    passenger.setFare(Float.parseFloat(fields[9]));
-                    passenger.setSurvived(fields[1].equals("1"));
-                    passenger.setPclass(Pclass.valueOf(fields[0]));
-                    passenger.setSibSp(Integer.parseInt(fields[6]));
-                    passenger.setParch(Integer.parseInt(fields[7]));
-                    passenger.setSex(fields[4]);
+                    passenger.setSex(fields[3]);
+                    passenger.setAge(fields[4].isEmpty() ? null : (int) Math.round(Double.parseDouble(fields[4])));
+                    passenger.setSibSp(Integer.parseInt(fields[5]));
+                    passenger.setParch(Integer.parseInt(fields[6]));
+                    passenger.setFare(Float.parseFloat(fields[7]));
                     return passenger;
                 }).collect(Collectors.toList());
 
