@@ -1,6 +1,6 @@
 Titanic Statistics Board
 
-Функциональность
+##Функциональность:
 
 Загрузка данных с сайта и их сохранение в базу данных при первом запуске
 
@@ -13,7 +13,7 @@ Titanic Statistics Board
 
 Кэширование данных для повышения производительности
 
-Технологии
+##Технологии:
 
 Java 21
 
@@ -29,17 +29,15 @@ RESTful API
 
 HTML5/CSS, Bootstrap
 
-Сборка и запуск
+##Сборка и запуск:
 
 Клонируйте репозиторий:
-
 
 git clone https://github.com/haisenberggoodman/Titanic-statistics-board
 
 cd Titanic-statistics-board
 
 Настройка БД PostgreSQL:
-
 
 create database titanic;
 
